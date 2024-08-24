@@ -1,6 +1,7 @@
-import { Loader, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -10,19 +11,18 @@ import { Label } from "@/components/ui/label";
 
 const signInForm = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
 });
 
-type SignInForm = z.infer<typeof signInForm>;
+type signInForm = z.infer<typeof signInForm>;
 
 export function SignIn() {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<SignInForm>();
+  } = useForm<signInForm>();
 
-  async function handleSignIn(data: SignInForm) {
+  async function handleSignIn(data: signInForm) {
     console.log(data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.success("Enviamos um link de autenticação para o seu e-mail.");
@@ -32,6 +32,9 @@ export function SignIn() {
     <>
       <Helmet title="Login" />
       <div className="p-8">
+        <Button asChild variant="ghost" className="absolute right-8 top-8">
+          <Link to="/sign-up">Novo estabelecimento</Link>
+        </Button>
         <div className="flex w-80 flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -51,14 +54,6 @@ export function SignIn() {
               placeholder="E-mail"
               className="input"
               {...register("email", { required: true })}
-              required
-            />
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              type="password"
-              placeholder="Senha"
-              className="input"
-              {...register("password", { required: true })}
               required
             />
             <Button disabled={isSubmitting}>
